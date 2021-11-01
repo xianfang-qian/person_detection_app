@@ -38,8 +38,15 @@ def parse_args() -> argparse.Namespace:
 
 def main():  # noqa
     print("start app.....")
+    directory = "openvino_person_detection_app"
+    parent_dir = "/data/"
+    path = os.path.join(parent_dir, directory)
+    if os.path.exists(path):
+        print("{} folder exists".format(directory))
+    else:
+        os.mkdir(path)
     #log.basicConfig(format='[ %(levelname)s ] %(message)s', level=log.INFO, stream=sys.stdout)
-    log.basicConfig(format='[ %(levelname)s ] %(message)s', level=log.INFO, filename='pd.log', filemode='a')
+    log.basicConfig(format='[ %(levelname)s ] %(message)s', level=log.INFO, filename=os.path.join(path, 'pd.log'), filemode='a')
     args = parse_args()
 
     # ---------------------------Step 1. Initialize inference engine core--------------------------------------------------
@@ -148,7 +155,7 @@ def main():  # noqa
             # Draw a bounding box on a output image
             cv2.rectangle(output_image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
 
-    cv2.imwrite('out.bmp', output_image)
+    cv2.imwrite(os.path.join(path, 'out.bmp'), output_image)
     if os.path.exists('out.bmp'):
         log.info('Image out.bmp created!')
     else:
